@@ -58,7 +58,7 @@ fun AboutScreen() {
                 withStyle(style = SpanStyle(color = TextGray)) {
                     append("Dikembangkan oleh: ")
                 }
-                pushStringAnnotation(tag = "URL", annotation = "https://github.com/Xisdev")
+                pushStringAnnotation(tag = "URL", annotation = "https://github.com/Xisdev/MyPower-LoadShedding")
                 withStyle(style = SpanStyle(color = androidx.compose.ui.graphics.Color(0xFF64B5F6), fontWeight = FontWeight.Bold)) {
                     append("Xisdev")
                 }
