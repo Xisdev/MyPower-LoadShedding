@@ -18,6 +18,10 @@ import okhttp3.Request
 data class AppState(
     val voltage: Float = 0f,
     val current: Float = 0f,
+    val voltageP2: Float = 0f,
+    val currentP2: Float = 0f,
+    val voltageP3: Float = 0f,
+    val currentP3: Float = 0f,
     val powerP1: Float = 0f,
     val powerP2: Float = 0f,
     val powerP3: Float = 0f,
@@ -98,7 +102,7 @@ class BlynkViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             while (true) {
                 fetchData()
-                delay(5000) // Polling diubah menjadi 5 detik untuk menghemat kuota message
+                delay(1000) // Ultra low-latency polling (1 detik)
             }
         }
     }
@@ -125,35 +129,46 @@ class BlynkViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun fetchData() {
+    private suspend fun fetchData() {
         try {
             val online = isHardwareConnected()
             if (!online) {
                 _uiState.update { it.copy(isOnline = false, isLoading = false) }
-                return // Hentikan fetching data sensor jika ESP offline untuk menghemat kuota (10 messages saved/poll)
+                return
             }
 
-            val v1 = fetchPin("v1").toFloatOrNull() ?: _uiState.value.voltage
-            val v2 = fetchPin("v2").toFloatOrNull() ?: _uiState.value.current
-            val v3 = fetchPin("v3").toFloatOrNull() ?: _uiState.value.powerP1
-            val v4 = fetchPin("v4").toFloatOrNull() ?: _uiState.value.powerP2
-            val v5 = fetchPin("v5").toFloatOrNull() ?: _uiState.value.powerP3
-            val v6 = fetchPin("v6").toFloatOrNull() ?: _uiState.value.totalPower
+            // Multiplexing Fetch: Tarik V0 yang berisi seluruh data sekaligus (CSV string)
+            val rawData = fetchPin("v0").trim()
+            val parts = rawData.split(",")
             
-            val v7 = fetchPin("v7") != "0"
-            val v8 = fetchPin("v8") != "0"
-            val v9 = fetchPin("v9") != "0"
-            val v10 = fetchPin("v10") == "0" 
+            if (parts.size >= 14) {
+                val v1 = parts[0].trim().toFloatOrNull() ?: _uiState.value.voltage
+                val v2 = parts[1].trim().toFloatOrNull() ?: _uiState.value.current
+                val v11 = parts[2].trim().toFloatOrNull() ?: _uiState.value.voltageP2
+                val v12 = parts[3].trim().toFloatOrNull() ?: _uiState.value.currentP2
+                val v13 = parts[4].trim().toFloatOrNull() ?: _uiState.value.voltageP3
+                val v14 = parts[5].trim().toFloatOrNull() ?: _uiState.value.currentP3
+                val v3 = parts[6].trim().toFloatOrNull() ?: _uiState.value.powerP1
+                val v4 = parts[7].trim().toFloatOrNull() ?: _uiState.value.powerP2
+                val v5 = parts[8].trim().toFloatOrNull() ?: _uiState.value.powerP3
+                val v6 = parts[9].trim().toFloatOrNull() ?: _uiState.value.totalPower
+                
+                val v7 = parts[10].trim() == "1"
+                val v8 = parts[11].trim() == "1"
+                val v9 = parts[12].trim() == "1"
+                val v10 = parts[13].trim() == "0" // 0 = Auto, 1 = Manual
 
-            _uiState.update {
-                val newHistory = (it.historyPower + v6).takeLast(30)
-                it.copy(
-                    isOnline = true,
-                    voltage = v1, current = v2, powerP1 = v3, powerP2 = v4, powerP3 = v5, totalPower = v6,
-                    relayP1On = v7, relayP2On = v8, relayP3On = v9, isAutoMode = v10,
-                    historyPower = newHistory,
-                    isLoading = false, error = null
-                )
+                _uiState.update {
+                    val newHistory = (it.historyPower + v6).takeLast(30)
+                    it.copy(
+                        isOnline = true,
+                        voltage = v1, current = v2, powerP1 = v3, powerP2 = v4, powerP3 = v5, totalPower = v6,
+                        voltageP2 = v11, currentP2 = v12, voltageP3 = v13, currentP3 = v14,
+                        relayP1On = v7, relayP2On = v8, relayP3On = v9, isAutoMode = v10,
+                        historyPower = newHistory,
+                        isLoading = false, error = null
+                    )
+                }
             }
         } catch (e: Exception) {
             _uiState.update { it.copy(error = "Gagal mengambil data dari server") }

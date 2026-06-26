@@ -34,10 +34,11 @@ fun TutorialScreen() {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text("Aplikasi ini menggunakan Virtual Pin (V1-V10). Buat Datastream di Blynk Web Console sesuai panduan nilai Min-Max berikut:", color = TextGray, fontSize = 14.sp)
+            Text("Aplikasi ini menggunakan Virtual Pin (V0-V14). Buat Datastream di Blynk Web Console sesuai panduan nilai berikut:", color = TextGray, fontSize = 14.sp)
             
-            DatastreamInfo("V1", "Tegangan", "Double", "0", "300")
-            DatastreamInfo("V2", "Arus", "Double", "0", "30")
+            DatastreamInfo("V0", "Multiplex Data", "String", "-", "-")
+            DatastreamInfo("V1", "Tegangan Master", "Double", "0", "300")
+            DatastreamInfo("V2", "Arus Master", "Double", "0", "30")
             DatastreamInfo("V3", "Daya P1", "Double", "0", "2000")
             DatastreamInfo("V4", "Daya P2", "Double", "0", "2000")
             DatastreamInfo("V5", "Daya P3", "Double", "0", "2000")
@@ -46,6 +47,10 @@ fun TutorialScreen() {
             DatastreamInfo("V8", "Relay P2", "Integer", "0", "1")
             DatastreamInfo("V9", "Relay P3", "Integer", "0", "1")
             DatastreamInfo("V10", "Mode Auto/Manual", "Integer", "0", "1")
+            DatastreamInfo("V11", "Tegangan P2", "Double", "0", "300")
+            DatastreamInfo("V12", "Arus P2", "Double", "0", "30")
+            DatastreamInfo("V13", "Tegangan P3", "Double", "0", "300")
+            DatastreamInfo("V14", "Arus P3", "Double", "0", "30")
         }
     }
 }

@@ -45,20 +45,25 @@ Arsitektur perangkat keras ini terdiri dari tiga node ESP32 yang terdistribusi:
 
 ## Pengaturan Datastream Blynk
 
-Agar perangkat keras dapat tersinkronisasi dengan Aplikasi Android, Anda wajib mengatur Datastream di Blynk Web Console Anda persis seperti tabel berikut:
-
-| Virtual Pin | Nama Datastream | Tipe Data | Min | Max |
-| :--- | :--- | :--- | :--- | :--- |
-| **V1** | Tegangan | Double | 0 | 300 |
-| **V2** | Arus | Double | 0 | 30 |
-| **V3** | Daya P1 | Double | 0 | 2000 |
-| **V4** | Daya P2 | Double | 0 | 2000 |
-| **V5** | Daya P3 | Double | 0 | 2000 |
-| **V6** | Total Daya | Double | 0 | 5000 |
-| **V7** | Relay P1 | Integer | 0 | 1 |
-| **V8** | Relay P2 | Integer | 0 | 1 |
-| **V9** | Relay P3 | Integer | 0 | 1 |
-| **V10** | Mode (Auto/Manual)| Integer | 0 | 1 |
+### 2. Setup Blynk IoT
+1. Buat Template baru di Blynk Console dengan tipe ESP32 & WiFi.
+2. Buat Datastream berikut di tab Datastreams:
+   - **V0**: Tipe `String` - Nama: "Multiplex Data" *(Khusus untuk Android UI Cepat)*
+   - **V1**: Tipe `Double` - Nama: "Tegangan Master"
+   - **V2**: Tipe `Double` - Nama: "Arus Master"
+   - **V3**: Tipe `Double` - Nama: "Daya P1"
+   - **V4**: Tipe `Double` - Nama: "Daya P2"
+   - **V5**: Tipe `Double` - Nama: "Daya P3"
+   - **V6**: Tipe `Double` - Nama: "Total Daya"
+   - **V7**: Tipe `Integer` - Nama: "Relay P1" (Min: 0, Max: 1)
+   - **V8**: Tipe `Integer` - Nama: "Relay P2" (Min: 0, Max: 1)
+   - **V9**: Tipe `Integer` - Nama: "Relay P3" (Min: 0, Max: 1)
+   - **V10**: Tipe `Integer` - Nama: "Mode" (0: Auto, 1: Manual)
+   - **V11**: Tipe `Double` - Nama: "Tegangan P2"
+   - **V12**: Tipe `Double` - Nama: "Arus P2"
+   - **V13**: Tipe `Double` - Nama: "Tegangan P3"
+   - **V14**: Tipe `Double` - Nama: "Arus P3"
+3. Copy **Template ID**, **Template Name**, dan **Auth Token** ke dalam kode `master_node.ino`.
 
 ## Panduan Memulai Instalasi
 

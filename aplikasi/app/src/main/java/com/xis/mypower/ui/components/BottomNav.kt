@@ -15,6 +15,7 @@ import com.xis.mypower.ui.theme.BackgroundDark
 import com.xis.mypower.ui.theme.PrimaryGreen
 import com.xis.mypower.ui.theme.TextGray
 
+@Suppress("DEPRECATION")
 @Composable
 fun BottomNav(
     currentRoute: String,

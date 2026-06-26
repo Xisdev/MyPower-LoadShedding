@@ -92,8 +92,8 @@ fun DashboardScreen(state: AppState, onOpenDrawer: () -> Unit) {
             }
 
             PriorityCard(title = "PRIORITAS 1 (BEBAN UTAMA)", power = state.powerP1, voltage = state.voltage, current = state.current, relayOn = state.relayP1On)
-            PriorityCard(title = "PRIORITAS 2", power = state.powerP2, voltage = 0f, current = 0f, relayOn = state.relayP2On)
-            PriorityCard(title = "PRIORITAS 3", power = state.powerP3, voltage = 0f, current = 0f, relayOn = state.relayP3On)
+            PriorityCard(title = "PRIORITAS 2", power = state.powerP2, voltage = state.voltageP2, current = state.currentP2, relayOn = state.relayP2On)
+            PriorityCard(title = "PRIORITAS 3", power = state.powerP3, voltage = state.voltageP3, current = state.currentP3, relayOn = state.relayP3On)
         }
     }
 }
